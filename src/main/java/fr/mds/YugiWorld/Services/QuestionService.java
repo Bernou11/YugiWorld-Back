@@ -11,7 +11,6 @@ import fr.mds.YugiWorld.Entities.QuestionsEntity;
 import fr.mds.YugiWorld.Entities.ReponsesEntity;
 import fr.mds.YugiWorld.Repositories.QuestionReponseLienRepository;
 import fr.mds.YugiWorld.Repositories.QuestionsRepository;
-import fr.mds.YugiWorld.Repositories.ReponsesRepository;
 import java.util.ArrayList;
 
 @Service
@@ -19,9 +18,6 @@ public class QuestionService {
 
     @Autowired
     private QuestionsRepository questionRepository;
-
-    @Autowired
-    private ReponsesRepository reponseRepository;
 
     @Autowired
     private QuestionReponseLienRepository questionReponseLienRepository;
@@ -32,35 +28,13 @@ public class QuestionService {
         return questionRepository.save(question);
     }
 
-    public ReponsesEntity createReponse(int questionId, String reponseText, int nombreReponses) {
-        QuestionsEntity question = questionRepository.findById(questionId).orElseThrow(() -> new IllegalArgumentException("Question not found"));
-        ReponsesEntity reponse = new ReponsesEntity();
-        reponse.setReponses(reponseText);
-        reponse.setNombre_reponses(nombreReponses);
-        reponse.setQuestion(question);
-        return reponseRepository.save(reponse);
-    }
-
-    public QuestionReponseLienEntity lierReponses(int questionId, int reponse1Id, int reponse2Id) {
-        QuestionsEntity question = questionRepository.findById(questionId).orElseThrow(() -> new IllegalArgumentException("La question n'a pas été trouvée"));
-        ReponsesEntity reponse1 = reponseRepository.findById(reponse1Id).orElseThrow(() -> new IllegalArgumentException("La première réponse n'a pas été trouvée"));
-        ReponsesEntity reponse2 = reponseRepository.findById(reponse2Id).orElseThrow(() -> new IllegalArgumentException("La deuxième réponse n'a pas été trouvée"));
-
-        QuestionReponseLienEntity lien = new QuestionReponseLienEntity();
-        lien.setQuestion(question);
-        lien.setReponse1(reponse1);
-        lien.setReponse2(reponse2);
-
-        return questionReponseLienRepository.save(lien);
-    }
-
     public List<ReponsesEntity> getLinkedReponses(int questionId) {
         List<QuestionReponseLienEntity> liens = questionReponseLienRepository.findByQuestionId(questionId);
 
         List<ReponsesEntity> reponsesLiees = new ArrayList<>();
         for (QuestionReponseLienEntity lien : liens) {
-            reponsesLiees.add(lien.getReponse1()); // Ajouter la première réponse liée
-            reponsesLiees.add(lien.getReponse2()); // Ajouter la deuxième réponse liée
+            reponsesLiees.add(lien.getReponse1()); 
+            reponsesLiees.add(lien.getReponse2());        
         }
         return reponsesLiees;
     }
