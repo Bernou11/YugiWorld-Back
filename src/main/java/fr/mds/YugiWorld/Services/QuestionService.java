@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fr.mds.YugiWorld.DTO.QuestionDto;
 import fr.mds.YugiWorld.Entities.QuestionsEntity;
 import fr.mds.YugiWorld.Repositories.QuestionsRepository;
 
@@ -15,9 +16,9 @@ public class QuestionService {
     @Autowired
     private QuestionsRepository questionRepository;
 
-    public QuestionsEntity createQuestion(String questionText) {
+    public QuestionsEntity createQuestion(QuestionDto questionDto) {
         QuestionsEntity question = new QuestionsEntity();
-        question.setQuestion(questionText);
+        question.setQuestion(questionDto.getQuestionText());
         return questionRepository.save(question);
     }
 
